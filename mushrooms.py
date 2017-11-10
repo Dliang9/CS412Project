@@ -22,6 +22,8 @@ def featureProbability(header,data):
                 prob[r] = {}
             if not c in prob[r]:
                 prob[r][c] = 0
+            
+            #need to divide by no. of each variable not data\s length
             prob[r][c] = count[r][c]/len(data)
             print(c)
             print(prob[r][c])

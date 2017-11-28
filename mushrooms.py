@@ -1,5 +1,15 @@
 import csv
 
+class mushroom:
+
+    def __init__(self, label, feature, prob):
+        self.l = label
+        self.f = feature
+        self.p = prob
+        
+    def getProb(self) :
+        return self.p
+
 def likelihoodProbability(header,data,result):
     #count number of each variable for each feature
     count_pos = {}
@@ -40,6 +50,19 @@ def likelihoodProbability(header,data,result):
             print("p ",count_neg[r][c])
             print("----------------------------------")
             print(prob[r][c])
+            
+    #determining feature importance 
+    features = [] 
+    for r in count_pos:
+        for c in count_pos[r]:
+            features.append(mushroom(r, c, prob[r][c]))
+            
+    sortedElements = sorted(features, key=mushroom.getProb)
+    
+    #for e in sortedElements:
+      #  print(e.l)
+      #  print(e.f)
+      #  print(e.p)    
     return prob
             
 def calculate_predictor_prob(header, data):

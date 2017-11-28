@@ -60,7 +60,18 @@ def calculate_predictor_prob(header, data):
          
     return predictor_prob;
 
-    
+
+def k_fold_cv(X, K, rand = False):
+    if rand: from random import shuffle; X=list(X); shuffle(X)
+    for k in range(K):
+        train =[x for i, x in enumerate(X) if i % K != k]
+        validation = [x for i, x in enumerate(X) if i % K == k]
+        yield train, validation
+
+X = [i for i in range(10)]
+for train, validation in k_fold_cv(X, K=2):
+    for x in X: assert (x in train) ^ (x in validation), x
+
     
 def main():
     rd = open("mushrooms.csv")

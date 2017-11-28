@@ -1,7 +1,7 @@
 # CS412Project
-Semester long machine learning project performing data analysis on a mushroom database
+Semester-long machine learning project performing data analysis on a mushroom database
 
-Naive Bayes classification:
+Naïve Bayes classification:
 	P(c|x) = (P(x|c) * P(c)) / P(x)
 
 	P(c|x) <--- Posteriror Probability
@@ -15,7 +15,7 @@ Mushroom Object:
 	Probability - edible
 
 Likelihood Probablity:
-	Calculates P(x|c) from Naive Bayes classification
+	Calculates P(x|c) from Naïve Bayes classification
 
 Calulate Predictor Probability:
-	Calculates P(x) from Naive Bayes classification
+	Calculates P(x) from Naïve Bayes classification

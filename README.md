@@ -15,4 +15,7 @@ Mushroom Object:
 	Probability - edible
 
 Likelihood Probablity:
-	Calculates P(x|c) from Navie Bayes classification
+	Calculates P(x|c) from Naive Bayes classification
+
+Calulate Predictor Probability:
+	Calculates P(x) from Naive Bayes classification

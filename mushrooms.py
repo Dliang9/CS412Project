@@ -92,7 +92,7 @@ def main():
     # calcuate the prior distribution for P(y=edible)
     p_e = edible_count/count
     
-    prob = likehoodProbability(header,data,result)
+    prob = likelihoodProbability(header,data,result)
     predictor_probs = calculate_predictor_prob(header, data)
 
 if __name__=="__main__":

@@ -24,22 +24,22 @@ def likelihoodProbability(header,data):
     #edible probability of each variable 
     prob = {}
     for r in count_pos:
-        # print("##################################")
-        # print(r)
+        print("##################################")
+        print(r)
         for c in count_pos[r]:
-            # print(count_pos[r])
+            print(count_pos[r])
             if not r in prob:
                 prob[r] = {}
             if not c in prob[r]:
                 prob[r][c] = 0
             #probability of each variable = # of edible / total # of the variable in its feature
             prob[r][c] = count_pos[r][c]/(count_pos[r][c]+count_neg[r][c])
-            # print("++++++++++++++++++++++++++++++++++")
-            # print(c)
-            # print("e ",count_pos[r][c])
-            # print("p ",count_neg[r][c])
-            # print("----------------------------------")
-            # print(prob[r][c])
+            print("++++++++++++++++++++++++++++++++++")
+            print(c)
+            print("e ",count_pos[r][c])
+            print("p ",count_neg[r][c])
+            print("----------------------------------")
+            print(prob[r][c])
     return prob
             
 def calculate_predictor_prob(header, data):

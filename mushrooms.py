@@ -1,6 +1,6 @@
 import csv
 
-def likelihoodProbability(header,data):
+def likelihoodProbability(header,data,result):
     #count number of each variable for each feature
     count_pos = {}
     count_neg = {}
@@ -15,7 +15,7 @@ def likelihoodProbability(header,data):
                 count_pos[header[r]][data[c][r]] = 0
             if not data[c][r] in count_neg[header[r]]:
                 count_neg[header[r]][data[c][r]] = 0
-            if data[c][0] == "e":
+            if result[c] == "e":
                 count_pos[header[r]][data[c][r]] += 1
             else:
                 count_neg[header[r]][data[c][r]] += 1
@@ -70,18 +70,21 @@ def main():
     # contain the headers
     header = []
 
-    # 2d array that contains data
+     # 2d array that contains data
     data = []
     edible_count = 0
+    result = []
 
     for line in lines:
         if (count ==0):
+            
             header = line[0].split( ",")
             header.pop(0)   # the first item is result
         else:
             tmp = line[0].split(",")
             if (tmp[0] == 'e'):
                 edible_count += 1
+            result.append(tmp[0])
             tmp.pop(0)
             data.append(tmp)
         count += 1
@@ -89,7 +92,7 @@ def main():
     # calcuate the prior distribution for P(y=edible)
     p_e = edible_count/count
     
-    prob = likelihoodProbability(header,data)
+    prob = likehoodProbability(header,data,result)
     predictor_probs = calculate_predictor_prob(header, data)
 
 if __name__=="__main__":

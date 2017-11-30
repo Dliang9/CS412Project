@@ -3,14 +3,6 @@ import numpy as np
 
 class mushroom:
 
-    def __init__(self, label, feature, prob):
-        self.l = label
-        self.f = feature
-        self.p = prob
-        
-    def getProb(self) :
-        return self.p
-
 def likelihoodProbability(header,data,result):
     #count number of each variable for each feature
     count_pos = {}
@@ -35,22 +27,16 @@ def likelihoodProbability(header,data,result):
     #edible probability of each variable 
     prob = {}
     for r in count_pos:
-        print("##################################")
-        print(r)
+       
         for c in count_pos[r]:
-            print(count_pos[r])
+            
             if not r in prob:
                 prob[r] = {}
             if not c in prob[r]:
                 prob[r][c] = 0
             #probability of each variable = # of edible / total # of the variable in its feature
             prob[r][c] = count_pos[r][c]/(count_pos[r][c]+count_neg[r][c])
-            print("++++++++++++++++++++++++++++++++++")
-            print(c)
-            print("e ",count_pos[r][c])
-            print("p ",count_neg[r][c])
-            print("----------------------------------")
-            print(prob[r][c])
+           
             
     #determining feature importance 
     features = [] 
@@ -92,30 +78,31 @@ def calculate_prediction(prob, predictor_probs, test_data, header, p_e, result):
     for data in test_data:
         i = 0
         likelihood = 1.0
+        likelihood_ = 1.0
         predictor = 1.0
         flag = 0
         while i < len(header):
             head = header[i]
             feature = data[i]
-            if feature not in prob[head]:
-                tmp_prob = 0
-                flag = 1
-                break
+            if not feature in prob[head]:
+                prob[head][feature] = 0
             
             likelihood = likelihood * prob[head][feature]
-            #print(head)
-            #print(feature)
-           # print(prob[head][feature])
-            predictor *= predictor_probs[header[i]][data[i]]
+            likelihood_ = likelihood_ *(1 - prob[head][feature])
+            #predictor *= predictor_probs[header[i]][data[i]]
             i += 1
-        if (flag == 0 ):
-            tmp_prob = likelihood * p_e #/ predictor
-        if (tmp_prob >= 0.5): # edible
-            if result[index] == 'e':
-               error += 1
-        if (tmp_prob < 0.5): # not edible
+        
+        tmp_prob = likelihood * p_e #/ predictor
+                
+        tmp_prob_ = likelihood_ * ( 1 - p_e )
+        
+        if (tmp_prob >= tmp_prob_): # edible
             if result[index] != 'e':
                error += 1
+        if (tmp_prob < tmp_prob_): # not edible
+            if result[index] == 'e':
+               error += 1
+        index += 1
     print("error rate " + str(error) + "/" + str(len(result)))          
     return error/len(result)
 
@@ -169,7 +156,6 @@ def main():
         if i == k-1:
             end = len(data)
         
-
         # calcuate the prior distribution for P(y=edible)
         for ln in train_cls:
             if ln == "e":

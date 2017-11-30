@@ -1,4 +1,5 @@
 import csv
+import numpy as np
 
 class mushroom:
 
@@ -83,7 +84,6 @@ def calculate_predictor_prob(header, data):
          
     return predictor_prob;
 
-
 def calculate_prediction(prob, predictor_probs, test_data, header, p_e, result):
     index = 0
     error = 0
@@ -93,38 +93,46 @@ def calculate_prediction(prob, predictor_probs, test_data, header, p_e, result):
         i = 0
         likelihood = 1.0
         predictor = 1.0
-        while i < len(data):
+        flag = 0
+        while i < len(header):
             head = header[i]
             feature = data[i]
+            if feature not in prob[head]:
+                tmp_prob = 0
+                flag = 1
+                break
+            
             likelihood = likelihood * prob[head][feature]
+            #print(head)
+            #print(feature)
+           # print(prob[head][feature])
             predictor *= predictor_probs[header[i]][data[i]]
             i += 1
-
-        # tmp_prob = likelihood * p_e / predictor
-        tmp_prob = likelihood * p_e 
+        if (flag == 0 ):
+            tmp_prob = likelihood * p_e #/ predictor
         if (tmp_prob >= 0.5): # edible
             if result[index] == 'e':
                error += 1
         if (tmp_prob < 0.5): # not edible
             if result[index] != 'e':
                error += 1
-    print("error rate " + str(error) + "/" + str(len(result)))
-
+    print("error rate " + str(error) + "/" + str(len(result)))          
+    return error/len(result)
 
     
 def main():
     rd = open("mushrooms.csv")
     lines = csv.reader(rd, delimiter=' ')
-    
+    count = 0
+    error = []
 
     # contain the headers
     header = []
 
     # 2d array that contains data
     data = []
-    
+   
     result = []
-    count = 0
     for line in lines:
         if (count ==0):
             
@@ -176,8 +184,9 @@ def main():
         predictor_probs = calculate_predictor_prob(header, data)
     
         # use likelihood, preditor, prior probabilities to calculate the predictions
-        calculate_prediction(prob, predictor_probs, data, header, p_e, result )
-
+        err = calculate_prediction(prob, predictor_probs, test, header, p_e, test_cls )
+        error.append(err)
+    print(np.mean(error))
 
 
 

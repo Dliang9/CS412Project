@@ -128,14 +128,14 @@ for train, validation in k_fold_cv(X, K=2):
 def main():
     rd = open("mushrooms.csv")
     lines = csv.reader(rd, delimiter=' ')
-    count = 0
+    
 
     # contain the headers
     header = []
 
-     # 2d array that contains data
+    # 2d array that contains data
     data = []
-    edible_count = 0
+    
     result = []
 
     for line in lines:
@@ -145,19 +145,47 @@ def main():
             header.pop(0)   # the first item is result
         else:
             tmp = line[0].split(",")
-            if (tmp[0] == 'e'):
-                edible_count += 1
+            
             result.append(tmp[0])
             tmp.pop(0)
             data.append(tmp)
-        count += 1
- 
-    # calcuate the prior distribution for P(y=edible)
-    p_e = edible_count/count
+        
     
-    prob = likelihoodProbability(header,data,result)
-    predictor_probs = calculate_predictor_prob(header, data)
-    calculate_prediction(prob, predictor_probs, data, header, p_e, result )
+    #K-FOLD
+    k = 10
+    test_length = len(data)/k
+    start = 0
+    end = test_length
+    for i in range(0,k):
+        train = []
+        train_cls = []
+        test = []
+        test_cls = []
+        edible_count = 0
+        for line in range(0,len(data)):
+            if line >= start and line <= end:
+                test.append(data[line])
+                test_cls.append(result[line])
+            else:
+                train.append(data[line])
+                train_cls.append(result[line])
+        start += test_length
+        end += test_length
+        if i == k-1:
+            end = len(data)
+        
+        # calcuate the prior distribution for P(y=edible)
+        #p_e = edible_count/count
+        
+        for ln in train_cls:
+            if ln == "e":
+                eduble_count += 1
+        p_e = edible_count/len(train_cls)
+            
+    
+        prob = likehoodProbability(header,train,train_cls)
+        predictor_probs = calculate_predictor_prob(header, train)
+        calculate_prediction(prob, predictor_probs, test, header, p_e, test_cls )
 
 
 if __name__=="__main__":

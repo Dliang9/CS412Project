@@ -174,18 +174,24 @@ def main():
         if i == k-1:
             end = len(data)
         
+
         # calcuate the prior distribution for P(y=edible)
-        #p_e = edible_count/count
-        
         for ln in train_cls:
             if ln == "e":
                 eduble_count += 1
         p_e = edible_count/len(train_cls)
             
+        # calcuate the prior distribution for P(y=edible)
+        p_e = edible_count/count
+        # calculate the likelihood probability 
+        prob = likelihoodProbability(header,data,result)
+        # calculate the predictor probability
+        predictor_probs = calculate_predictor_prob(header, data)
     
-        prob = likehoodProbability(header,train,train_cls)
-        predictor_probs = calculate_predictor_prob(header, train)
-        calculate_prediction(prob, predictor_probs, test, header, p_e, test_cls )
+        # use likelihood, preditor, prior probabilities to calculate the predictions
+        calculate_prediction(prob, predictor_probs, data, header, p_e, result )
+
+
 
 
 if __name__=="__main__":

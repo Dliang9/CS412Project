@@ -111,19 +111,6 @@ def calculate_prediction(prob, predictor_probs, test_data, header, p_e, result):
     print("error rate " + str(error) + "/" + str(len(result)))
 
 
-
-#to be adapted to this project -- likely wrapped into def main()
-def k_fold_cv(X, K, rand = False):
-    if rand: from random import shuffle; X=list(X); shuffle(X)
-    for k in range(K):
-        train =[x for i, x in enumerate(X) if i % K != k]
-        validation = [x for i, x in enumerate(X) if i % K == k]
-        yield train, validation
-
-X = [i for i in range(10)]
-for train, validation in k_fold_cv(X, K=2):
-    for x in X: assert (x in train) ^ (x in validation), x
-
     
 def main():
     rd = open("mushrooms.csv")

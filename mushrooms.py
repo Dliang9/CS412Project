@@ -124,7 +124,7 @@ def main():
     data = []
     
     result = []
-
+    count = 0
     for line in lines:
         if (count ==0):
             

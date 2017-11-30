@@ -1,7 +1,13 @@
+###################################################################
+#                                                                 #
+#   CS 412 - TEAM PROJECT                                         #
+#   Members -   Noemi Dolnik, David Liang, Megan Hauck, Anh Tran, #
+#               Hengbin Li, and Jean-Philippe Douailly-Backman.   #
+#                                                                 #
+###################################################################
+
 import csv
 import numpy as np
-
-class mushroom:
 
 def likelihoodProbability(header,data,result):
     #count number of each variable for each feature
@@ -27,31 +33,18 @@ def likelihoodProbability(header,data,result):
     #edible probability of each variable 
     prob = {}
     for r in count_pos:
-       
+        
         for c in count_pos[r]:
             
             if not r in prob:
                 prob[r] = {}
             if not c in prob[r]:
                 prob[r][c] = 0
-            #probability of each variable = # of edible / total # of the variable in its feature
-            prob[r][c] = count_pos[r][c]/(count_pos[r][c]+count_neg[r][c])
-           
-            
-    #determining feature importance 
-    features = [] 
-    for r in count_pos:
-        for c in count_pos[r]:
-            features.append(mushroom(r, c, prob[r][c]))
-            
-    sortedElements = sorted(features, key=mushroom.getProb)
+            #probability of each variable = # of edible / total # of that variable in its feature
+            prob[r][c] = count_pos[r][c]/(count_pos[r][c]+count_neg[r][c])    
     
-    #for e in sortedElements:
-      #  print(e.l)
-      #  print(e.f)
-      #  print(e.p)    
     return prob
-            
+
 def calculate_predictor_prob(header, data):
     num_features = len(header)
     i = 0
@@ -105,21 +98,20 @@ def calculate_prediction(prob, predictor_probs, test_data, header, p_e, result):
         index += 1
     print("error rate " + str(error) + "/" + str(len(result)))          
     return error/len(result)
-
-    
+                
 def main():
     rd = open("mushrooms.csv")
     lines = csv.reader(rd, delimiter=' ')
     count = 0
-    error = []
 
     # contain the headers
     header = []
 
     # 2d array that contains data
     data = []
-   
+    error = []
     result = []
+
     for line in lines:
         if (count ==0):
             
@@ -131,6 +123,7 @@ def main():
             result.append(tmp[0])
             tmp.pop(0)
             data.append(tmp)
+        count += 1
         
     
     #K-FOLD
@@ -153,28 +146,22 @@ def main():
                 train_cls.append(result[line])
         start += test_length
         end += test_length
+        
         if i == k-1:
             end = len(data)
         
-        # calcuate the prior distribution for P(y=edible)
+        # calcuate the prior distribution for P(y=edible)        
         for ln in train_cls:
             if ln == "e":
-                eduble_count += 1
+                edible_count += 1
         p_e = edible_count/len(train_cls)
             
-        # calcuate the prior distribution for P(y=edible)
-        p_e = edible_count/count
-        # calculate the likelihood probability 
-        prob = likelihoodProbability(header,data,result)
-        # calculate the predictor probability
-        predictor_probs = calculate_predictor_prob(header, data)
     
-        # use likelihood, preditor, prior probabilities to calculate the predictions
+        prob = likelihoodProbability(header,train,train_cls)
+        predictor_probs = calculate_predictor_prob(header, train)
         err = calculate_prediction(prob, predictor_probs, test, header, p_e, test_cls )
         error.append(err)
     print(np.mean(error))
-
-
 
 if __name__=="__main__":
     main()

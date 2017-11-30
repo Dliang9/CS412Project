@@ -83,7 +83,7 @@ def calculate_predictor_prob(header, data):
          
     return predictor_prob;
 
-
+#to be adapted to this project
 def k_fold_cv(X, K, rand = False):
     if rand: from random import shuffle; X=list(X); shuffle(X)
     for k in range(K):

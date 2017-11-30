@@ -100,7 +100,8 @@ def calculate_prediction(prob, predictor_probs, test_data, header, p_e, result):
             predictor *= predictor_probs[header[i]][data[i]]
             i += 1
 
-        tmp_prob = likelihood * p_e / predictor
+        # tmp_prob = likelihood * p_e / predictor
+        tmp_prob = likelihood * p_e 
         if (tmp_prob >= 0.5): # edible
             if result[index] == 'e':
                error += 1

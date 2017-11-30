@@ -83,6 +83,34 @@ def calculate_predictor_prob(header, data):
          
     return predictor_prob;
 
+
+def calculate_prediction(prob, predictor_probs, test_data, header, p_e, result):
+    index = 0
+    error = 0
+    head = ''
+    feature = ''
+    for data in test_data:
+        i = 0
+        likelihood = 1.0
+        predictor = 1.0
+        while i < len(data):
+            head = header[i]
+            feature = data[i]
+            likelihood = likelihood * prob[head][feature]
+            predictor *= predictor_probs[header[i]][data[i]]
+            i += 1
+
+        tmp_prob = likelihood * p_e / predictor
+        if (tmp_prob >= 0.5): # edible
+            if result[index] == 'e':
+               error += 1
+        if (tmp_prob < 0.5): # not edible
+            if result[index] != 'e':
+               error += 1
+    print("error rate " + str(error) + "/" + str(len(result)))
+
+
+
 #to be adapted to this project -- likely wrapped into def main()
 def k_fold_cv(X, K, rand = False):
     if rand: from random import shuffle; X=list(X); shuffle(X)
@@ -128,6 +156,8 @@ def main():
     
     prob = likelihoodProbability(header,data,result)
     predictor_probs = calculate_predictor_prob(header, data)
+    calculate_prediction(prob, predictor_probs, data, header, p_e, result )
+
 
 if __name__=="__main__":
     main()
